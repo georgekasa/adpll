@@ -103,7 +103,7 @@ semilogx(f, adpll_pn, 'black', 'LineWidth', 1.5);
 xlabel('Frequency Offset (Hz)');
 ylabel('Phase Noise (dBc/Hz)');
 grid on;
-% Total ADPLL noise PSD
+
 
 
 %tdc_pn_cl = tdc_pn_lin.*abs(H_cl_tdc).^2;
