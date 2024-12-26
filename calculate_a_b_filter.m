@@ -36,8 +36,6 @@ fprintf("The closest power Alpha of 2^-x for %f is 2^-%d = %f\n", alpha, rounded
 [rounded_beta, closest_value_beta] = closest_power_of_two_inverse(beta);
 fprintf("The closest power beta of 2^-x for %f is 2^-%d = %f\n", beta, rounded_beta, closest_value_beta);
 
-%alpha = 2^(-4); % Loop Filter var
-%ro =2^(-11); % Loop Filter var
 
 function [rounded_x, closest_value] = closest_power_of_two_inverse(number)
     if number <= 0
