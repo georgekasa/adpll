@@ -1,0 +1,34 @@
+
+`timescale 1ns / 1fs
+module TDC_ENCODER (
+    input REF, // CKR
+    input [26:0] TDC_CODE,
+	input rst_b,
+    output signed [5:0] PHASE
+);
+	reg tdc_code_detect;
+ //   reg signed [5:0] PHASE;
+    reg signed [5:0] PHASE_PRE;
+	wire [127:0] counter;
+	integer i;
+	initial begin
+	    PHASE_PRE = 5'd0;// -5'd8;
+	    tdc_code_detect = 1'b0;
+	end
+
+	assign PHASE =   PHASE_PRE ;
+
+    always @(posedge REF or negedge rst_b) begin
+		PHASE_PRE = 5'd0;
+
+		tdc_code_detect = 1'b0;
+		for (i = 0 ; i < 25 ; i = i + 1) begin :encoder_block
+        		if (TDC_CODE[i] && ~TDC_CODE[i+1] && ~tdc_code_detect) begin
+				PHASE_PRE <= PHASE_PRE + i;
+				tdc_code_detect <= 1'b1;
+			end
+		end
+
+    end
+
+endmodule
