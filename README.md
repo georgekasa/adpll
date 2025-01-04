@@ -16,4 +16,5 @@ Thank you in advance
 
 2025 01 03
 
-upload plot of the verilog model, still has a lot of bugs in fractional mode 
+upload plot of the verilog model, still has a lot of bugs in fractional mod
+Again in the spirit of open source, if someone finds bugs or/and make improvements report the issue(s)
