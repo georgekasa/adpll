@@ -8,6 +8,8 @@ Tref = 1.0/Freference;
 Tdco = 1.0/Fdco;
 FCW = Fdco/Freference;
 
+
+ref_pn = -130;
 %TDC & DCO spec.
 tdc_res = 20e-12;
 kdco = 20e3;
@@ -56,9 +58,9 @@ H_iir4_filter_tf = H_iir4_filter_num./ H_iir4_filter_den;
 
 % Multiply all the transfer functions with IIR filters
 Hol_total_iir = Hol_tf .*(H_iir1_filter_tf .* H_iir2_filter_tf .* H_iir3_filter_tf .* H_iir4_filter_tf);
-
+H_closed_tdc = Hol_total_iir./(1+Hol_total_iir);
 % CLosed loop transfer function of the TDC multplied with Quant noise eq 4.97
-H_closed_tdc = L_tdc_quant.*Hol_total_iir./(1+Hol_total_iir);
+H_closed_quant = L_tdc_quant.*(abs(H_closed_tdc).^2);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -73,26 +75,29 @@ L_dco_quant = (1/12).*((kdco./f).^2).*(1/Freference).*sinc(kdco./Freference)^2;
 
 %Transfer Function of DCO eq 4.98 NO MASH
 Hclosed_dco = 1.0./(1.0 + Hol_total_iir)
-Hclosed_dco_quant = Hclosed_dco.*L_dco_quant;
+Hclosed_dco_quant = (abs(Hclosed_dco).^2).*L_dco_quant;
 
 
 %Transfer Function of reference eq 4.96
 Hclosed_ref = FCW.*Hol_total_iir./(1.0 + Hol_total_iir)
+reference_pn_lin = 10.^(ref_pn./10);
+Hclosed_ref_noise = reference_pn_lin.*abs(Hclosed_ref).^2;
 
+adpll_total_pn = H_closed_quant + Hclosed_dco_quant + Hclosed_ref_noise;
 
-%Noises
-L_tdc = 10*log10(L_tdc_quant);
-PN_tdc_noIIR = 20*log10(abs(H_closed_tdc_NoIIR));
-PN_tdc_IIR = 20*log10(abs(H_closed_tdc));
-L_dco = 10*log10(L_dco_quant);
-PN_dco_IIR = 20*log10(abs(Hclosed_dco_quant));
-PN_ref_IIR = 20*log10(abs(Hclosed_ref));
+%Noises shaped by the H(s)
+%L_tdc = 10*log10(L_tdc_quant);
+%PN_tdc_noIIR = 20*log10(abs(H_closed_tdc_NoIIR));
+PN_tdc_IIR = 10.*log10(abs(H_closed_quant));
+%L_dco = 10*log10(L_dco_quant);
+PN_dco_IIR = 10.*log10(abs(Hclosed_dco_quant));
+PN_ref_IIR = 10.*log10(abs(Hclosed_ref_noise));
 % Total ADPLL noise PSD
-adpll_pn = PN_tdc_IIR + PN_dco_IIR + PN_ref_IIR;
 
+adpll_pn = 10.*log10(adpll_total_pn);
 
 figure;
-semilogx(f, L_tdc, 'g', 'LineWidth', 1.5);%tdc quantiz
+
 hold on
 %semilogx(f, PN_tdc_noIIR, 'b', 'LineWidth', 1.5);
 semilogx(f, PN_tdc_IIR, 'b', 'LineWidth', 1.5);
