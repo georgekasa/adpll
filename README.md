@@ -10,7 +10,6 @@ Thank you in advance
 
 
 2024 08 25
-1)missing noise of reference to include
 2)missing pn of the dco to apply in the H(s)
 
 
