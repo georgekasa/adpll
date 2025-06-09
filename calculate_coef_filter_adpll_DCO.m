@@ -1,5 +1,5 @@
 function [alpha,rho_integral] = calculate_coef_filter_adpll_DCO(Fref,divider,  fnatural, z_damping_factor )
-
+%%%%%%%%%%%%%%%%%%%%page 73 MMW WU, Staszewski, John Long;
 Wnatural = 2*pi*fnatural;
 rho_integral = divider*(Wnatural/Fref)^2;
 alpha = z_damping_factor*2.0*sqrt(rho_integral*divider);
