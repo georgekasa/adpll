@@ -9,7 +9,7 @@ Fdco = 1.20e9;
 Tref = 1/Fref;
 Ndiv = Fdco/Fref;
 tdc_res = 55e-12; % TDC time resolution
-Kdco = 700e3;
+Kdco = 2*pi*700e3;
 phaseMargin = 40.0; % In degrees should be at least over 60 in verilog
 % Unity gain bandwidth
 Wugbw = 2*pi*0.2e6;
